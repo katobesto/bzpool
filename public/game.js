@@ -30,13 +30,14 @@
     chkGuide: $("chk-guide"), chkStartGuide: $("chk-start-guide"),
     name0: $("name-0"), name1: $("name-1"),
     musicSelect: $("music-select"), startScreen: $("start-screen"),
+    hud: $("hud"), btnHud: $("btn-hud"),
     startVer: $("start-ver"),
     buildBadge: $("build-badge"),
   };
   // NB: el texto de la insignia se asigna tras declarar BUILD (sección Arranque)
 
   /* ------------------------- Constantes ------------------------- */
-  const BUILD = "9"; // sube este número en cada deploy (se muestra en la pantalla de inicio)
+  const BUILD = "10"; // sube este número en cada deploy (se muestra en la pantalla de inicio)
   const W = canvas.width;   // 1120
   const H = canvas.height;  // 600
   const TABLE = { x: 58, y: 49, w: 1004, h: 502 };
@@ -1014,6 +1015,34 @@
     }
   }
 
+  /* ------------- Panel inferior (HUD): oculto para dar mesa a la pantalla ------------- */
+  // En pantallas anchas (16:9) el alto manda: el panel (efecto/potencia/mensajes)
+  // se oculta por defecto y se recupera con el botón 🎛️. En vertical (póster/retrato)
+  // la mesa está limitada por el ancho, así que el panel se muestra.
+  const HUD_KEY = "billar8.hud";
+  const hudPref = (() => { try { return localStorage.getItem(HUD_KEY); } catch (e) { return null; } })();
+  const isLandscape16x9 = () => {
+    const w = window.innerWidth || 0, h = window.innerHeight || 0;
+    return h > 0 && w / h > 1.15;
+  };
+  let hudVisible = hudPref !== null ? hudPref !== "0" : !isLandscape16x9();
+  function applyHud() {
+    if (!el.hud) return;
+    el.hud.classList.toggle("hud--hidden", !hudVisible);
+    if (el.btnHud) el.btnHud.setAttribute("aria-pressed", String(hudVisible));
+  }
+  function setHud(v, persist) {
+    hudVisible = !!v;
+    applyHud();
+    if (persist !== false) {
+      try { localStorage.setItem(HUD_KEY, hudVisible ? "1" : "0"); } catch (e) {}
+    }
+  }
+  // si el usuario aún no eligió, sigue a la orientación al girar el dispositivo
+  window.addEventListener("resize", () => {
+    if (hudPref === null) { hudVisible = !isLandscape16x9(); applyHud(); }
+  });
+
   /* ------------------------- Botones ------------------------- */
   // Toque robusto en móvil: en iOS, el primer toque tras escribir en un input
   // lo "absorbe" el navegador al cerrar el teclado (el click sintético no llega
@@ -1046,6 +1075,7 @@
     updateSpinDot();
     setMsg("Efecto quitado: la blanca irá recta.");
   });
+  onTap(el.btnHud, () => setHud(!hudVisible));
   el.chkGuide.addEventListener("change", () => {
     showGuide = el.chkGuide.checked;
     if (!showGuide) setMsg("Ayudas de dirección ocultas: solo el palo.");
@@ -1075,6 +1105,7 @@
   /* ------------------------- Arranque ------------------------- */
   if (el.buildBadge) el.buildBadge.textContent = "build " + BUILD;
   if (el.startVer) el.startVer.textContent = "build " + BUILD;
+  applyHud(); // estado inicial del panel inferior según orientación
   console.log("[bzpool] build " + BUILD);
   // Punto de depuración (consola del navegador): window.__billar
   if (typeof window !== "undefined") {

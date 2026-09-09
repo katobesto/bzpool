@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Billar 8 · Dos jugadores</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="stylesheet" href="style.css?v=9" />
+  <link rel="stylesheet" href="style.css?v=10" />
 </head>
 <body>
   <header class="topbar">
@@ -36,6 +36,7 @@
       <label class="chk" title="Muestra u oculta la línea de trayectoria, la bola fantasma y las flechas de desviación">
         <input type="checkbox" id="chk-guide" /><span class="chk__txt">Mostrar ayudas de dirección</span><span class="chk__ico" title="Ayudas de dirección">🎯</span>
       </label>
+      <button id="btn-hud" class="btn btn--small btn--hud" title="Mostrar u ocultar el panel inferior (efecto, potencia y mensajes)" aria-pressed="false">🎛️</button>
       <button id="btn-music" class="btn" title="Pausar / reanudar música" aria-pressed="true">🎶</button>
       <button id="btn-new" class="btn" title="Nueva partida">↻ Nueva</button>
       <button id="btn-sound" class="btn" title="Sonido" aria-pressed="true">🔊</button>
@@ -47,7 +48,7 @@
       <canvas id="game" width="1120" height="600"></canvas>
     </div>
 
-    <div class="hud">
+    <div class="hud" id="hud">
       <div class="hud__block hud__aim">
         <span class="hud__label">Apuntado</span>
         <div class="power-meter" title="Estira hacia el lado opuesto al disparo: la distancia fija la potencia">
@@ -123,6 +124,6 @@
     </div>
   </div>
 
-  <script src="game.js?v=9"></script>
+  <script src="game.js?v=10"></script>
 </body>
 </html>

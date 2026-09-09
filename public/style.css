@@ -46,6 +46,8 @@ body {
   background: linear-gradient(180deg, rgba(20, 28, 40, 0.95), rgba(15, 21, 30, 0.9));
   border-bottom: 1px solid var(--line);
   flex-wrap: nowrap;
+  flex-shrink: 0;
+  max-height: 64px; /* la barra superior nunca supera los 64px */
 }
 
 .brand { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
@@ -371,6 +373,12 @@ body {
 }
 .modal__card h2 { margin: 0 0 10px; font-size: 26px; }
 .modal__card p { color: var(--muted); margin: 0 0 20px; font-size: 15px; }
+
+.hud--hidden { display: none; }
+/* botón de toggle del panel inferior: encendido = panel visible */
+.btn--hud { font-size: 13px; }
+.btn--hud[aria-pressed="false"] { opacity: 0.55; border-color: transparent; }
+.btn--hud[aria-pressed="true"] { opacity: 1; border-color: var(--accent); color: var(--accent); }
 
 /* ---------- Móvil / tablet: topbar en una línea aún más compacta ---------- */
 @media (max-width: 820px) {

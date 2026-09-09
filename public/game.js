@@ -31,12 +31,14 @@
     name0: $("name-0"), name1: $("name-1"),
     musicSelect: $("music-select"), startScreen: $("start-screen"),
     startVer: $("start-ver"),
+    buildBadge: $("build-badge"),
   };
+  if (el.buildBadge) el.buildBadge.textContent = "build " + BUILD;
   if (el.startVer) el.startVer.textContent = "build " + BUILD;
   console.log("[bzpool] build " + BUILD);
 
   /* ------------------------- Constantes ------------------------- */
-  const BUILD = "6"; // sube este número en cada deploy (se muestra en la pantalla de inicio)
+  const BUILD = "7"; // sube este número en cada deploy (se muestra en la pantalla de inicio)
   const W = canvas.width;   // 1120
   const H = canvas.height;  // 600
   const TABLE = { x: 58, y: 49, w: 1004, h: 502 };

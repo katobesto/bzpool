@@ -230,6 +230,23 @@ body {
   color: var(--text);
 }
 
+/* ---------- Insignia de build (diagnóstico: ¿qué versión ejecuta el móvil?) ---------- */
+.build-badge {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  z-index: 60; /* por encima de todo, incluida la pantalla de inicio */
+  background: var(--accent);
+  color: #20160a;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
 /* ---------- Pantalla de inicio ---------- */
 .start-overlay {
   position: fixed; inset: 0;

@@ -9,13 +9,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Sirve los archivos estáticos (index.html, js, css, imágenes) desde public/.
-// El HTML se sirve con no-cache para que iOS/Safari no sirva una versión
-// antigua en caché (los assets js/css ya se revalidan con etag).
+// Todo se sirve con no-store: iOS Safari y Chrome en móvil cachean agresivamente
+// los assets y seguían ejecutando un build antiguo del juego.
 app.use(express.static(path.join(__dirname, "public"), {
-  setHeaders(res, filePath) {
-    if (filePath.endsWith(".html")) {
-      res.setHeader("Cache-Control", "no-cache, must-revalidate");
-    }
+  setHeaders(res) {
+    res.setHeader("Cache-Control", "no-store, max-age=0, must-revalidate");
   },
 }));
 

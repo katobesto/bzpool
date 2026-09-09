@@ -268,6 +268,13 @@ body {
 .start-field input:focus, .start-field select:focus { border-color: var(--accent); }
 .chk--inline { border: 0; background: none; padding: 0; }
 .start-btn { font-size: 17px; font-weight: 700; padding: 12px; width: 100%; margin-top: 5px; }
+.start-ver {
+  text-align: center;
+  font-size: 10px;
+  color: var(--muted);
+  opacity: 0.6;
+  letter-spacing: 1px;
+}
 
 /* ---------- Popup de cambio de turno ---------- */
 .turn-popup {

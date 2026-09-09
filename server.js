@@ -29,6 +29,13 @@ app.get("/api/music", (req, res) => {
   }
 });
 
+// Healthcheck (lo usa el HEALTHCHECK del contenedor Docker / Coolify)
+app.get("/health", (req, res) => {
+  let mp3 = 0;
+  try { mp3 = fs.readdirSync(MUSIC_DIR).filter((f) => f.toLowerCase().endsWith(".mp3")).length; } catch (e) {}
+  res.json({ ok: true, game: "billar-8", mp3: mp3 });
+});
+
 // Redirige cualquier otra ruta a la página del juego (SPA-like)
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));

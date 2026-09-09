@@ -8,8 +8,16 @@ const fs = require("fs");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Sirve los archivos estáticos (index.html, js, css, imágenes) desde public/
-app.use(express.static(path.join(__dirname, "public")));
+// Sirve los archivos estáticos (index.html, js, css, imágenes) desde public/.
+// El HTML se sirve con no-cache para que iOS/Safari no sirva una versión
+// antigua en caché (los assets js/css ya se revalidan con etag).
+app.use(express.static(path.join(__dirname, "public"), {
+  setHeaders(res, filePath) {
+    if (filePath.endsWith(".html")) {
+      res.setHeader("Cache-Control", "no-cache, must-revalidate");
+    }
+  },
+}));
 
 // Música de fondo: carpeta music/ en la raíz del servidor
 const MUSIC_DIR = path.join(__dirname, "music");

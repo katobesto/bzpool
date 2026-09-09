@@ -235,8 +235,9 @@ body {
   position: fixed; inset: 0;
   z-index: 40;
   display: flex; align-items: center; justify-content: center;
-  background: radial-gradient(1100px 650px at 50% -10%, #182636 0%, rgba(8, 12, 18, 0.97) 62%);
-  backdrop-filter: blur(4px);
+  /* SIN backdrop-filter: en iOS Safari rompe el position:fixed (la capa
+     se ancla al viewport de layout y los toques no caen sobre el contenido) */
+  background: radial-gradient(1100px 650px at 50% -10%, #182636 0%, #080c12 62%);
   transition: opacity .25s;
 }
 .start-overlay.hidden { opacity: 0; pointer-events: none; }
@@ -309,8 +310,7 @@ body {
 /* ---------- Modal ---------- */
 .modal {
   position: fixed; inset: 0;
-  background: rgba(5, 8, 12, 0.7);
-  backdrop-filter: blur(3px);
+  background: rgba(5, 8, 12, 0.88);
   display: flex; align-items: center; justify-content: center;
   z-index: 50;
   opacity: 1;

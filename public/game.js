@@ -482,6 +482,8 @@
   }
 
   /* ------------------------- Entrada: ratón y táctil ------------------------- */
+  // mientras esté visible la pantalla de inicio, el juego no toma entradas
+  const startOpen = () => !el.startScreen.classList.contains("hidden");
   function toLogical(e) {
     const rect = canvas.getBoundingClientRect();
     const t = e.touches && e.touches.length ? e.touches[0] : e;
@@ -491,6 +493,7 @@
     };
   }
   function onDown(e) {
+    if (startOpen()) return;
     ensureAudio();
     const p = toLogical(e);
     if (state === "placing") {
@@ -505,6 +508,7 @@
     if (e.cancelable) e.preventDefault();
   }
   function onMove(e) {
+    if (startOpen()) return;
     if (state === "placing") {
       moveCue(toLogical(e));
       if (e.cancelable) e.preventDefault();
@@ -518,6 +522,7 @@
     }
   }
   function onUp(e) {
+    if (startOpen()) return;
     if (state === "placing") { dropCue(); if (e.cancelable) e.preventDefault(); return; }
     if (aiming && state === "aiming") {
       aiming = false;
@@ -566,11 +571,11 @@
     updateSpinDot();
   }
   let spinDrag = false;
-  spinCanvas.addEventListener("mousedown", (e) => { spinDrag = true; ensureAudio(); setSpinFromEvent(e); e.preventDefault(); });
-  window.addEventListener("mousemove", (e) => { if (spinDrag) setSpinFromEvent(e); });
+  spinCanvas.addEventListener("mousedown", (e) => { if (startOpen()) return; spinDrag = true; ensureAudio(); setSpinFromEvent(e); e.preventDefault(); });
+  window.addEventListener("mousemove", (e) => { if (spinDrag && !startOpen()) setSpinFromEvent(e); });
   window.addEventListener("mouseup", () => { spinDrag = false; });
-  spinCanvas.addEventListener("touchstart", (e) => { spinDrag = true; ensureAudio(); setSpinFromEvent(e); e.preventDefault(); }, { passive: false });
-  window.addEventListener("touchmove", (e) => { if (spinDrag) setSpinFromEvent(e); }, { passive: false });
+  spinCanvas.addEventListener("touchstart", (e) => { if (startOpen()) return; spinDrag = true; ensureAudio(); setSpinFromEvent(e); e.preventDefault(); }, { passive: false });
+  window.addEventListener("touchmove", (e) => { if (spinDrag && !startOpen()) setSpinFromEvent(e); }, { passive: false });
   window.addEventListener("touchend", () => { spinDrag = false; });
 
   /* ------------------------- Dibujo ------------------------- */

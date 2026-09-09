@@ -36,13 +36,13 @@
   // NB: el texto de la insignia se asigna tras declarar BUILD (sección Arranque)
 
   /* ------------------------- Constantes ------------------------- */
-  const BUILD = "8"; // sube este número en cada deploy (se muestra en la pantalla de inicio)
+  const BUILD = "9"; // sube este número en cada deploy (se muestra en la pantalla de inicio)
   const W = canvas.width;   // 1120
   const H = canvas.height;  // 600
   const TABLE = { x: 58, y: 49, w: 1004, h: 502 };
-  const R = 12;             // radio de bola
-  const POCKET_R = 30;      // radio de captura
-  const POCKET_VIS = 31;    // radio visual del hueco
+  const R = 13.8;         // radio de bola (+15% sobre 12 para que no se vean tan pequeñas)
+  const POCKET_R = 34.5;   // radio de captura (escalado con la bola)
+  const POCKET_VIS = 35.5;  // radio visual del hueco
 
   const POCKETS = [
     { x: TABLE.x, y: TABLE.y },

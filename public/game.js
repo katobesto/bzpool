@@ -33,12 +33,10 @@
     startVer: $("start-ver"),
     buildBadge: $("build-badge"),
   };
-  if (el.buildBadge) el.buildBadge.textContent = "build " + BUILD;
-  if (el.startVer) el.startVer.textContent = "build " + BUILD;
-  console.log("[bzpool] build " + BUILD);
+  // NB: el texto de la insignia se asigna tras declarar BUILD (sección Arranque)
 
   /* ------------------------- Constantes ------------------------- */
-  const BUILD = "7"; // sube este número en cada deploy (se muestra en la pantalla de inicio)
+  const BUILD = "8"; // sube este número en cada deploy (se muestra en la pantalla de inicio)
   const W = canvas.width;   // 1120
   const H = canvas.height;  // 600
   const TABLE = { x: 58, y: 49, w: 1004, h: 502 };
@@ -986,40 +984,64 @@
     el.startScreen.classList.remove("hidden");
   }
   async function startGame() {
-    const n0 = (el.name0.value || "").trim() || "Jugador 1";
-    const n1 = (el.name1.value || "").trim() || "Jugador 2";
-    saveNames(n0, n1);
-    players[0].name = n0;
-    players[1].name = n1;
-    showGuide = !!el.chkStartGuide.checked;   // repercute en el check de partida
-    el.chkGuide.checked = showGuide;
-    ensureAudio();
-    // si la lista de canciones aún no llegó desde el servidor, pedirla ahora
-    if (!music.tracks.length && typeof fetch === "function") {
-      try {
-        const r = await fetch("/api/music");
-        const list = r.ok ? await r.json() : [];
-        music.tracks = Array.isArray(list) ? list : [];
-      } catch (e) {}
+    try {
+      // cierra el teclado móvil si un input lo tiene abierto (iOS)
+      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+      const n0 = (el.name0.value || "").trim() || "Jugador 1";
+      const n1 = (el.name1.value || "").trim() || "Jugador 2";
+      saveNames(n0, n1);
+      players[0].name = n0;
+      players[1].name = n1;
+      showGuide = !!el.chkStartGuide.checked;   // repercute en el check de partida
+      el.chkGuide.checked = showGuide;
+      ensureAudio();
+      // si la lista de canciones aún no llegó desde el servidor, pedirla ahora
+      if (!music.tracks.length && typeof fetch === "function") {
+        try {
+          const r = await fetch("/api/music");
+          const list = r.ok ? await r.json() : [];
+          music.tracks = Array.isArray(list) ? list : [];
+        } catch (e) {}
+      }
+      music.start(el.musicSelect.value || "");
+      el.startScreen.classList.add("hidden");
+      newGame();
+      setMsg(n0 + " vs " + n1 + " · " + P(currentPlayer) + " rompe.");
+    } catch (e) {
+      // error visible en pantalla (en el móvil no hay consola a mano)
+      console.error("[bzpool] startGame:", e);
+      setMsg("⚠️ No se pudo empezar: " + (e && e.message ? e.message : e));
     }
-    music.start(el.musicSelect.value || "");
-    el.startScreen.classList.add("hidden");
-    newGame();
-    setMsg(n0 + " vs " + n1 + " · " + P(currentPlayer) + " rompe.");
   }
 
   /* ------------------------- Botones ------------------------- */
-  el.btnNew.addEventListener("click", () => { ensureAudio(); openStartScreen(); });
-  el.btnAgain.addEventListener("click", () => { ensureAudio(); openStartScreen(); });
-  el.btnStart.addEventListener("click", () => startGame());
-  el.btnMusic.addEventListener("click", () => music.toggle());
-  el.btnSound.addEventListener("click", () => {
+  // Toque robusto en móvil: en iOS, el primer toque tras escribir en un input
+  // lo "absorbe" el navegador al cerrar el teclado (el click sintético no llega
+  // al botón). Se usa touchend (siempre se dispara) y se suprime el click
+  // duplicado; en escritorio solo actúa el click.
+  let lastTouchTap = 0;
+  function onTap(btn, fn) {
+    btn.addEventListener("touchend", (e) => {
+      e.preventDefault(); // evita el click sintético → sin doble disparo
+      lastTouchTap = Date.now();
+      fn();
+    }, { passive: false });
+    btn.addEventListener("click", () => {
+      if (Date.now() - lastTouchTap < 600) return; // click derivado del touchend
+      fn();
+    });
+  }
+  onTap(el.btnNew, () => { ensureAudio(); openStartScreen(); });
+  onTap(el.btnAgain, () => { ensureAudio(); openStartScreen(); });
+  onTap(el.btnStart, () => startGame());
+  onTap(el.btnMusic, () => music.toggle());
+  onTap(el.btnSound, () => {
     soundOn = !soundOn;
     el.btnSound.textContent = soundOn ? "🔊" : "🔇";
     el.btnSound.setAttribute("aria-pressed", String(soundOn));
     ensureAudio();
   });
-  el.btnSpinReset.addEventListener("click", () => {
+  onTap(el.btnSpinReset, () => {
     spin = { x: 0, y: 0 };
     updateSpinDot();
     setMsg("Efecto quitado: la blanca irá recta.");
@@ -1051,6 +1073,9 @@
   }
 
   /* ------------------------- Arranque ------------------------- */
+  if (el.buildBadge) el.buildBadge.textContent = "build " + BUILD;
+  if (el.startVer) el.startVer.textContent = "build " + BUILD;
+  console.log("[bzpool] build " + BUILD);
   // Punto de depuración (consola del navegador): window.__billar
   if (typeof window !== "undefined") {
     window.__billar = {

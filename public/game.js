@@ -37,7 +37,7 @@
   // NB: el texto de la insignia se asigna tras declarar BUILD (sección Arranque)
 
   /* ------------------------- Constantes ------------------------- */
-  const BUILD = "10"; // sube este número en cada deploy (se muestra en la pantalla de inicio)
+  const BUILD = "11"; // sube este número en cada deploy (se muestra en la pantalla de inicio)
   const W = canvas.width;   // 1120
   const H = canvas.height;  // 600
   const TABLE = { x: 58, y: 49, w: 1004, h: 502 };
@@ -532,8 +532,10 @@
     if (aiming && state === "aiming") {
       aiming = false;
       shoot();
+      if (e.cancelable) e.preventDefault();
     }
-    if (e.cancelable) e.preventDefault();
+    // SIN preventDefault incondicional: mataría el click sintético de los
+    // controles nativos (checkbox de ayudas, etc.) al tocarlos con el dedo.
   }
   canvas.addEventListener("mousedown", onDown);
   window.addEventListener("mousemove", onMove);

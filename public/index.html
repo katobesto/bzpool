@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Billar 8 · Dos jugadores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand__ball">8</span>
+      <h1>Billar <span class="accent">8</span></h1>
+    </div>
+
+    <div class="players">
+      <div class="player" id="player-0">
+        <div class="player__name" id="pname-0">Jugador 1</div>
+        <div class="player__group" id="group-0">—</div>
+        <div class="player__balls" id="pocketed-0"></div>
+      </div>
+
+      <div class="turn-indicator" id="turn-indicator">
+        <span id="turn-text">Rompe Jugador 1</span>
+      </div>
+
+      <div class="player" id="player-1">
+        <div class="player__name" id="pname-1">Jugador 2</div>
+        <div class="player__group" id="group-1">—</div>
+        <div class="player__balls" id="pocketed-1"></div>
+      </div>
+    </div>
+
+    <div class="topbar__actions">
+      <label class="chk" title="Muestra u oculta la línea de trayectoria, la bola fantasma y las flechas de desviación">
+        <input type="checkbox" id="chk-guide" /> Mostrar ayudas de dirección
+      </label>
+      <button id="btn-music" class="btn" title="Pausar / reanudar música" aria-pressed="true">🎶</button>
+      <button id="btn-new" class="btn" title="Nueva partida">↻ Nueva</button>
+      <button id="btn-sound" class="btn" title="Sonido" aria-pressed="true">🔊</button>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div class="table-frame">
+      <canvas id="game" width="1120" height="600"></canvas>
+    </div>
+
+    <div class="hud">
+      <div class="hud__block hud__aim">
+        <span class="hud__label">Apuntado</span>
+        <div class="power-meter" title="Estira hacia el lado opuesto al disparo: la distancia fija la potencia">
+          <div class="power-meter__fill" id="power-fill"></div>
+        </div>
+        <span class="hud__hint">Estira el palo hacia el lado contrario y suelta (estilete)</span>
+      </div>
+
+      <div class="hud__block hud__spin">
+        <span class="hud__label">Efecto</span>
+        <div class="spin-pad">
+          <canvas id="spin" width="76" height="76"></canvas>
+          <span class="spin-pad__dot" id="spin-dot"></span>
+        </div>
+        <span class="hud__hint">Toca la bola para el giro</span>
+        <button id="btn-spin-reset" class="btn btn--small">Quitar efecto</button>
+      </div>
+
+      <div class="hud__block hud__msg">
+        <span class="hud__label">Mensaje</span>
+        <div class="msg" id="msg">Rompe Jugador 1. ¡Suerte!</div>
+      </div>
+    </div>
+  </main>
+
+  <div id="start-screen" class="start-overlay">
+    <div class="start-card">
+      <div class="start-brand">
+        <span class="brand__ball">8</span>
+        <h1>Billar <span class="accent">8</span></h1>
+      </div>
+      <p class="start-sub">Dos jugadores · el primer hueco define tu grupo · estira el palo y suelta (estilete)</p>
+
+      <div class="start-field">
+        <span>Jugador 1</span>
+        <input id="name-0" type="text" maxlength="16" placeholder="Jugador 1" autocomplete="off" />
+      </div>
+      <div class="start-field">
+        <span>Jugador 2</span>
+        <input id="name-1" type="text" maxlength="16" placeholder="Jugador 2" autocomplete="off" />
+      </div>
+
+      <div class="start-field">
+        <span>Música de fondo</span>
+        <select id="music-select">
+          <option value="">🎲 Aleatoria (barajar la lista)</option>
+        </select>
+      </div>
+
+      <label class="chk chk--inline" title="Línea de trayectoria, bola fantasma y flechas de desviación">
+        <input type="checkbox" id="chk-start-guide" /> Mostrar ayudas de dirección
+      </label>
+
+      <button id="btn-start" class="btn btn--primary start-btn">▶ Empezar</button>
+    </div>
+  </div>
+
+  <div id="turn-popup" class="turn-popup" aria-live="polite">
+    <div class="turn-popup__card">
+      <span class="turn-popup__label">Turno de</span>
+      <span class="turn-popup__name" id="turn-popup-name"></span>
+    </div>
+  </div>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal__card">
+      <h2 id="modal-title">Fin de la partida</h2>
+      <p id="modal-body"></p>
+      <button id="btn-again" class="btn btn--primary">Jugar de nuevo</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

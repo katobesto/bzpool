@@ -1,0 +1,12 @@
+# dependencias
+node_modules/
+
+# sistema
+.DS_Store
+
+# música de fondo (no subir a GitHub)
+music/*.mp3
+music/*.MP3
+
+# cachés locales
+.npm-cache/

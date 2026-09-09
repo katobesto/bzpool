@@ -1,0 +1,13 @@
+Carpeta de música de fondo
+==========================
+
+Pon aquí tus archivos .mp3 con música de fondo para la partida.
+
+- No necesitas reiniciar el servidor ni tocar el código: la pantalla de
+  inicio consulta /api/music y lista automáticamente los MP3 que haya aquí.
+- Si no eliges ninguna canción al empezar, se baraja la lista y se
+  reproducen en orden aleatorio, una tras otra.
+- Si eliges una canción concreta, se repite en bucle.
+
+Ejemplo:  copia "cumbia.mp3" y "jazz.mp3" en esta carpeta y al abrir el
+juego aparecerán en el selector de música de la pantalla de inicio.
